@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASW Proyecto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: #4a4a4a;
+            color: white;
+            padding: 2rem;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-content h2 {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-content p {
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .main-content {
+            flex: 1;
+            background-color: #ba68c8;
+            padding: 2rem;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 2rem;
+        }
+
+        .auth-buttons button {
+            padding: 0.5rem 1rem;
+            margin-left: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #f5f5f5;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .title {
+            font-size: 2rem;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .calendar-widget {
+            background: white;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-header {
+            background: #673ab7;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-image: url('images/uifaces-popular-image.jpg');
+            background-size: cover; 
+            background-position: center;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 1rem;
+            margin-left: auto;
+        }
+
+        .calendar-content {
+            padding: 1rem;
+        }
+
+        .calendar-sidebar {
+            width: 200px;
+            background: #673ab7;
+            color: white;
+            padding: 1rem;
+        }
+
+        .meeting-card {
+            background: #4caf50;
+            color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .description {
+            margin-top: 2rem;
+            color: white;
+            line-height: 1.6;
+            max-width: 800px;
+            text-align: justify;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #f5f5f5;
+            font-weight: 500;
+            margin-right: 10px;
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .modal-links {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .modal-links a {
+            color: #333;
+            text-decoration: underline;
+            margin: 0 0.5rem;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+ <!-- Login Modal -->
+ <div id="loginModal" class="modal-backdrop">
+    <div class="modal">
+        <button class="close-btn" onclick="hideModal('loginModal')">×</button>
+        <h2 class="modal-title">Login</h2>
+        <form>
+            <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" placeholder="Value">
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="Value">
+            </div>
+            <button type="button" class="submit-btn" onclick="loginUtil()">Sign In</button>
+            <div class="modal-links">
+                <a href="#" onclick="switchModal('loginModal', 'forgotModal')">Forgot password?</a>
+                <a href="#" onclick="switchModal('loginModal', 'registerModal')">Create new account</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Register Modal -->
+<div id="registerModal" class="modal-backdrop">
+    <div class="modal">
+        <button class="close-btn" onclick="hideModal('registerModal')">×</button>
+        <h2 class="modal-title">Create Account</h2>
+        <form>
+            <div class="form-group">
+                <label for="registerFirstName">First Name</label>
+                <input type="text" id="registerFirstName" placeholder="First name">
+            </div>
+            <div class="form-group">
+                <label for="registerLastName">Last Name</label>
+                <input type="text" id="registerLastName" placeholder="Last name">
+            </div>
+            <div class="form-group">
+                <label for="registerEmail">Email</label>
+                <input type="email" id="registerEmail" placeholder="Your email">
+            </div>
+            <div class="form-group">
+                <label for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" placeholder="Create password">
+            </div>
+            <div class="form-group">
+                <label for="registerConfirmPassword">Confirm Password</label>
+                <input type="password" id="registerConfirmPassword" placeholder="Confirm password">
+            </div>
+            <button type="button" class="submit-btn" onclick="registerUtil()">Create Account</button>
+            <div class="modal-links">
+                <a href="#" onclick="switchModal('registerModal', 'loginModal')">Already have an account? Login</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div id="forgotModal" class="modal-backdrop">
+    <div class="modal">
+        <button class="close-btn" onclick="hideModal('forgotModal')">×</button>
+        <h2 class="modal-title">Reset Password</h2>
+        <form>
+            <div class="form-group">
+                <label for="forgotEmail">Email</label>
+                <input type="email" id="forgotEmail" placeholder="Enter your email">
+            </div>
+            <button type="button" class="submit-btn">Reset Password</button>
+            <div class="modal-links">
+                <a href="#" onclick="switchModal('forgotModal', 'loginModal')">Back to Login</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+    <div class="sidebar">
+        <div class="logo">Logo</div>
+        <div class="sidebar-content">
+            <h2>DASW Proyecto</h2>
+        <p>
+            Organizador de llamadas con un sistema fácil de usar. User FRIENDLY </p>
+        <p>
+            Tu equipo merece la mejor herramienta para gestionar reuniones. Simplicidad y eficiencia en un solo lugar.
+        </p>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <button class="btn" onclick="showModal('loginModal')">Login</button>
+            <button class="btn" onclick="showModal('registerModal')">Register</button>
+        </div>
+        
+        <div class="content">
+            <h1 class="title">Disfruta de un sistema con el que tu equipo estará más organizado!</h1>
+            
+            <div class="calendar-widget">
+                <div class="calendar-header">
+                    <div class="user-info">
+                        <div class="user-avatar"></div>
+                        <span>Sam Smith</span>
+                    </div>
+                    <div class="calendar-nav">
+                        <span>Mes</span>
+                        <span>Semana</span>
+                        <span>Día</span>
+                    </div>
+                </div>
+                <div class="calendar-content">
+                    <div class="meeting-card">
+                        <h3>Reunión</h3>
+                        <p>Grupo 1</p>
+                        <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="description">
+                Olvídate de las confusiones horarias, los enlaces perdidos y las agendas desorganizadas. TimeSync es tu solución todo en uno para coordinar llamadas y reuniones de manera eficiente.
+            </p>
+
+            <p class="description">
+                Únete a miles de equipos que ya han optimizado su forma de trabajar. TimeSync es más que un organizador de llamadas: es tu aliado para una colaboración más eficiente y productiva. Perfecto para equipos remotos, híbridos y organizaciones de cualquier tamaño.
+            </p>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function switchModal(currentModalId, newModalId) {
+            hideModal(currentModalId);
+            showModal(newModalId);
+        }
+
+        // Cerrar modal al hacer clic fuera de él
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+            backdrop.addEventListener('click', (e) => {
+                if (e.target === backdrop) {
+                    hideModal(backdrop.id);
+                }
+            });
+        });
+
+        function loginUtil() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            login({ body: { email, password } }, {
+                status: (code) => ({ type: () => ({ send: (message) => alert(message) }) })
+            });
+        }
+
+        function registerUtil() {
+            const firstName = document.getElementById('registerFirstName').value;
+            const lastName = document.getElementById('registerLastName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            register({ body: { firstName, lastName, email, password } }, {
+                status: (code) => ({ type: () => ({ send: (message) => alert(message) }) })
+            });
+        }
+    </script>
+    <script src="utils/login_util.js"></script>
+
+</body>
+</html>

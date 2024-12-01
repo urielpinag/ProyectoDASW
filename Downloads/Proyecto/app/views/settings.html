@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración de Usuario</title>
+    <style>
+        body {
+            background-color: #ba68c8;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        /* Contenedor principal */
+        .admin-settings-container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
+
+        }
+
+        /* Títulos */
+        .admin-settings-container h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .settings-section h3 {
+            color: #555;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        /* Etiquetas y campos */
+        label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .input-field, .select-field {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        /* Secciones */
+        .settings-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        /* Botones */
+        .btn {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-save {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn-save:hover {
+            background-color: #218838;
+        }
+
+        .settings-actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Grupos */
+        .group-list {
+            margin-top: 10px;
+        }
+
+        .group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+        }
+
+        .group:first-child {
+            border-top: none;
+        }
+
+        .btn-dashboard {
+            margin-bottom: 20px;
+        }
+    </style>
+    <script src="utils/ajax_handler.js"></script>
+    <script src="utils/setting_utils.js"></script>
+
+    <script>
+        function updateUserUtil() {
+            let firstName = document.getElementById('user-firstName').value;
+            let lastName = document.getElementById('user-lastName').value;
+            let email = document.getElementById('user-email').value;
+            let password = document.getElementById('user-password').value;
+            let urlImage = document.getElementById('user-urlImage').value;
+            let groupUUID = document.getElementById('user-groupUUID').value;
+            let group = null;
+            let user = {
+                _firstName: firstName,
+                _lastName: lastName,
+                _email: email,
+                _password: password, // Corregido de userPassword a password
+                _urlImage: urlImage, // Corregido de userUrlImage a urlImage
+                _groupUUID: groupUUID, // Corregido de userGroupUUID a groupUUID
+                _group: group // Corregido de groups a group
+            };
+            updateUser(user);
+        }
+    </script>
+</head>
+<body>
+
+<div class="admin-settings-container">
+
+
+    <a class="btn-dashboard" onclick="toDashboard()">← Regresar al Dashboard</a>
+
+    <h2>Configuración de Usuario</h2>
+
+
+
+    <!-- Configuración de Usuario -->
+    <section class="settings-section">
+        <h3>Configuración de Usuario</h3>
+        <label for="user-firstName">Nombre de Usuario:</label>
+        <input type="text" id="user-firstName" class="input-field" placeholder="Nombre del usuario">
+
+        <label for="user-lastName">Apellido del Usuario:</label>
+        <input type="text" id="user-lastName" class="input-field" placeholder="Apellido del usuario">
+        
+        <label for="user-email">Correo Electrónico:</label>
+        <input type="email" id="user-email" class="input-field" placeholder="correo@ejemplo.com">
+        
+        <label for="user-password">Cambiar Contraseña:</label>
+        <input type="password" id="user-password" class="input-field" placeholder="Nueva contraseña">
+
+        <label for="user-urlImage">Cambiar imageURL:</label>
+        <input type="text" id="user-urlImage" class="input-field" placeholder="Nuevo imageURL">
+
+        <label for="user-groupUUID">Cambiar groupUUID:</label>
+        <input type="text" id="user-groupUUID" class="input-field" placeholder="Nuevo groupUUID">
+    </section>
+
+
+    <!-- Configuración General -->
+    <section class="settings-section">
+        <h3>Configuración General</h3>
+        
+        <label for="language">Idioma Predeterminado:</label>
+        <select id="language" class="select-field">
+            <option value="es">Español</option>
+            <option value="en">Inglés</option>
+            <!-- Más idiomas... -->
+        </select>
+    </section>
+    
+    <!-- Botón para guardar cambios -->
+    <div class="settings-actions">
+        <button class="btn-save" onclick="updateUserUtil()">Guardar Cambios</button>
+    </div>
+</div>
+
+</body>
+</html>
